@@ -25,11 +25,10 @@ public class AdminMenu extends JFrame {
 			summaryButton, accountButton, returnButton;
 	JLabel label1;
 	Container content;
-	private ArrayList<Customer>customerList;
+
 	private StartMenu start = new StartMenu();
 	
 	public AdminMenu() {
-		this.customerList = customerList;
 	
 	if(validateUser()) {
 		adminMenuCreated();

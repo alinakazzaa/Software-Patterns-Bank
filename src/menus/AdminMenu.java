@@ -17,6 +17,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import actions.AddAccountToCustomer;
+import actions.ApplyBankCharges;
+import actions.ApplyInterest;
 import actions.BankChargesListener;
 import actions.DeleteCustomer;
 import banking.BankingMain;
@@ -230,25 +232,33 @@ public class AdminMenu extends JFrame implements ActionListener {
 						}
 					}
 
-					if (found) {
-
-						switch (e.getActionCommand()) {
-						case "Add an Account to a Customer":
-							new AddAccountToCustomer(customer);
-						case "Apply Bank Charges":
-						case "Apply Interest":
-						case "Edit existing Customer":
-						case "Navigate Customer Collection":
-						case "Display Summary Of All Accounts":
-						case "Delete Customer":
-							new DeleteCustomer(customer);
-							
-
-						}
-					}
-
 				}
 
+			}
+			
+			if (found) {
+				switch (e.getActionCommand()) {
+				case "Add an Account to a Customer":
+					new AddAccountToCustomer(customer);
+					break;
+				case "Apply Bank Charges":
+					new ApplyBankCharges(customer);
+					break;
+				case "Apply Interest":
+					f.dispose();
+					new ApplyInterest(customer);
+					break;
+				case "Edit existing Customer":
+					break;
+				case "Navigate Customer Collection":
+					break;
+				case "Display Summary Of All Accounts":
+					break;
+				case "Delete Customer":
+					new DeleteCustomer(customer);
+					break;
+				}
+				
 			}
 
 		}

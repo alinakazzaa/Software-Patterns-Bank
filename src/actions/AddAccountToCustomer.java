@@ -2,8 +2,6 @@ package actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -15,11 +13,12 @@ import classes.AccountTransaction;
 import classes.Customer;
 import classes.CustomerCurrentAccount;
 import classes.CustomerDepositAccount;
-import dialog.DialogFrame;
+import menus.AdminMenu;
 
 public class AddAccountToCustomer extends JFrame implements ActionListener {
 
 	private BankingMain main = BankingMain.getInstance();
+	private AdminMenu admin = new AdminMenu();
 	private Customer customer;
 	private int index;
 	private String account;
@@ -81,17 +80,12 @@ public class AddAccountToCustomer extends JFrame implements ActionListener {
 			customer.getAccounts().add(deposit);
 			JOptionPane.showMessageDialog(null, "Account number = " + number, "Account created.",
 					JOptionPane.INFORMATION_MESSAGE);
-
 		}
 
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
-		System.out.println(ae.getActionCommand());
-		System.out.println(account);
-//				boolean loop = false; // remove unused variable
-
 	}
 	
 }

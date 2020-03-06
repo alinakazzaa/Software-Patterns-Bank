@@ -231,6 +231,7 @@ public class AdminMenu extends JFrame implements ActionListener {
 
 						switch (e.getActionCommand()) {
 						case "Add an Account to a Customer":
+							new AddAccountToCustomer(customer, customerList.indexOf(customer));
 						case "Apply Bank Charges":
 						case "Apply Interest":
 						case "Edit existing Customer":

@@ -19,17 +19,16 @@ import dialog.DialogFrame;
 
 public class AddAccountToCustomer extends JFrame implements ActionListener {
 
-	JFrame f;
 	private BankingMain main = BankingMain.getInstance();
 	private Customer customer;
 	private int index;
 	private String account;
 	String[] choices = { "Current Account", "Deposit Account" };
 
-	public AddAccountToCustomer(Customer customer, int index) {
+	public AddAccountToCustomer(Customer customer) {
 
 		this.customer = customer;
-		this.index = index;
+		this.index = main.getCustomers().indexOf(customer);
 
 		// a combo box in an dialog box that asks the admin what type of account they
 		// wish to create (deposit/current)
@@ -57,10 +56,10 @@ public class AddAccountToCustomer extends JFrame implements ActionListener {
 			
 			customer.addAccount(current);
 			
-			JOptionPane.showMessageDialog(f, "Account number = " + number + "\n PIN = " + pin, "Account created.",
+			JOptionPane.showMessageDialog(null, "Account number = " + number + "\n PIN = " + pin, "Account created.",
 					JOptionPane.INFORMATION_MESSAGE);
 			
-			System.out.println(customer.getAccounts().toString());
+			System.out.println(customer.getAccounts());
 
 		}
 
@@ -80,7 +79,7 @@ public class AddAccountToCustomer extends JFrame implements ActionListener {
 			CustomerDepositAccount deposit = new CustomerDepositAccount(interest, number, balance, transactionList);
 			
 			customer.getAccounts().add(deposit);
-			JOptionPane.showMessageDialog(f, "Account number = " + number, "Account created.",
+			JOptionPane.showMessageDialog(null, "Account number = " + number, "Account created.",
 					JOptionPane.INFORMATION_MESSAGE);
 
 		}

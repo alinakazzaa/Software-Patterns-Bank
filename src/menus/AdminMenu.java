@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 
 import actions.AddAccountToCustomer;
 import actions.BankChargesListener;
+import actions.DeleteCustomer;
 import banking.BankingMain;
 import classes.Customer;
 
@@ -45,6 +46,7 @@ public class AdminMenu extends JFrame implements ActionListener {
 	}
 
 	public void adminMenuCreated() {
+		System.out.println(main.getCustomers().toString());
 		f = new JFrame("Administrator Menu");
 		f.setSize(400, 400);
 		f.setLocation(200, 200);
@@ -207,11 +209,12 @@ public class AdminMenu extends JFrame implements ActionListener {
 			while (loop) {
 
 				String customerID = JOptionPane.showInputDialog(f,
-						"Customer ID of Customer You Wish to Add an Account to:");
+						"Customer ID:");
 
 				if (customerID.isEmpty() || customerID == null) {
 					System.out.println("empty");
 				} else {
+					
 					customer = main.getCustomerByID(customerID);
 
 					if (customer != null) {
@@ -231,13 +234,15 @@ public class AdminMenu extends JFrame implements ActionListener {
 
 						switch (e.getActionCommand()) {
 						case "Add an Account to a Customer":
-							new AddAccountToCustomer(customer, customerList.indexOf(customer));
+							new AddAccountToCustomer(customer);
 						case "Apply Bank Charges":
 						case "Apply Interest":
 						case "Edit existing Customer":
 						case "Navigate Customer Collection":
 						case "Display Summary Of All Accounts":
 						case "Delete Customer":
+							new DeleteCustomer(customer);
+							
 
 						}
 					}

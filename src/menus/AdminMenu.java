@@ -21,10 +21,12 @@ import actions.ApplyBankCharges;
 import actions.ApplyInterest;
 import actions.BankChargesListener;
 import actions.DeleteCustomer;
+import actions.EditCustomer;
 import banking.BankingMain;
 import classes.Customer;
 
 public class AdminMenu extends JFrame implements ActionListener {
+	
 	JFrame f;
 	JPanel deleteCustomerPanel, deleteAccountPanel, bankChargesPanel, interestPanel, editCustomerPanel, navigatePanel,
 			summaryPanel, accountPanel, returnPanel;
@@ -47,7 +49,7 @@ public class AdminMenu extends JFrame implements ActionListener {
 		}
 	}
 	
-	public static AdminMenu getInstance() {
+	public static AdminMenu getInstance() { // avoid log in each time window is called from another action - singleton
 		if(admin == null) {
 			admin = new AdminMenu();
 		}
@@ -65,6 +67,7 @@ public class AdminMenu extends JFrame implements ActionListener {
 				System.exit(0);
 			}
 		});
+		
 		f.setVisible(true);
 
 		// keep buttons together for validation of customer list size later
@@ -257,6 +260,8 @@ public class AdminMenu extends JFrame implements ActionListener {
 					new ApplyInterest(customer);
 					break;
 				case "Edit existing Customer":
+					f.dispose();
+					new EditCustomer(customer);
 					break;
 				case "Navigate Customer Collection":
 					break;

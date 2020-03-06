@@ -77,7 +77,7 @@ public class CustomerMenu extends JFrame {
 
 		panel2 = new JPanel();
 		add = new JButton("Add");
-		add.addActionListener(new AddCustomer());
+		add.addActionListener(new NewCustomer());
 
 		JButton cancel = new JButton("Cancel");
 		cancel.addActionListener(new ActionListener() {
@@ -173,7 +173,7 @@ public class CustomerMenu extends JFrame {
 		}
 	}
 
-	private class AddCustomer implements ActionListener {
+	private class NewCustomer implements ActionListener {
 		String PPS, firstName, surname, DOB, CustomerID, password;
 
 		public void actionPerformed(ActionEvent e) {

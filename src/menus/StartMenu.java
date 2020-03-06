@@ -6,6 +6,8 @@ import java.awt.event.*;
 import java.util.ArrayList;
 
 import javax.swing.*;
+
+import banking.BankingMain;
 import classes.Customer;
 
 
@@ -16,25 +18,18 @@ public class StartMenu extends JFrame{
 	JFrame f, f1;
 		JLabel customerIDLabel, passwordLabel;
 		JTextField customerIDTextField, passwordTextField;
-	Container content;
+		Container content;
 		Customer e;
-
 
 	 JPanel panel2;
 		JButton add;
 		String 	PPS,firstName,surname,DOB,CustomerID;
-	
-	public static void main(String[] args)
-	{
-		StartMenu driver = new StartMenu();
-		driver.menuStart();
-	}
-	
+		
 	public void menuStart()
 	{
 		   /*The menuStart method asks the user if they are a new customer, an existing customer or an admin. It will then start the create customer process
 		  if they are a new customer, or will ask them to log in if they are an existing customer or admin.*/
-			
+
 			f = new JFrame("User Type");
 			f.setSize(400, 300);
 			f.setLocation(200, 200);
@@ -73,7 +68,6 @@ public class StartMenu extends JFrame{
 			continueButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					String user = userType.getSelection().getActionCommand();
-					System.out.println("click");
 					
 					if(user.equals("New Customer") || user.equals("Customer")) {
 						f.dispose();
@@ -90,6 +84,5 @@ public class StartMenu extends JFrame{
 			continuePanel.add(continueButton);
 			content.add(continuePanel);
 			f.setVisible(true);
-
 	}
 }

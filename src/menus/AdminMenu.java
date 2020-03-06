@@ -44,7 +44,6 @@ public class AdminMenu extends JFrame implements ActionListener {
 		if (validateUser()) {
 			adminMenuCreated();
 		}
-
 	}
 
 	public void adminMenuCreated() {

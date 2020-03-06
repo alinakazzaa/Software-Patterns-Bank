@@ -78,6 +78,17 @@ public class Customer {
 		this.accounts.add(account);
 	}
 	
+	public CustomerAccount findAccount(String number) {
+		CustomerAccount account = null;
+		
+		for(CustomerAccount acc: this.accounts) {
+			if(acc.getNumber().equals(number)) {
+				account = acc;
+			}
+		}
+		return account;
+	}
+	
 	//mutator methods
 	public void setPPS(String PPS)
 	{

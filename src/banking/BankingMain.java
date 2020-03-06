@@ -31,5 +31,18 @@ public class BankingMain {
 	public void addCustomer(Customer customer) {
 		this.customerList.add(customer);
 	}
+	
+	public Customer getCustomerByID(String customerID) {
+		
+		Customer customer = null;
+		
+		for (Customer aCustomer : this.customerList) {
+			if (aCustomer.getCustomerID().equals(customerID)) {
+				customer = aCustomer;
+			}
+		}
+		
+		return customer;
+	}
 
 }

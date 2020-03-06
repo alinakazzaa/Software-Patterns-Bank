@@ -18,7 +18,6 @@ import menus.AdminMenu;
 public class AddAccountToCustomer extends JFrame implements ActionListener {
 
 	private BankingMain main = BankingMain.getInstance();
-	private AdminMenu admin = new AdminMenu();
 	private Customer customer;
 	private int index;
 	private String account;

@@ -23,7 +23,6 @@ public class ApplyInterest implements ActionListener {
 
 	private Customer customer;
 	private CustomerAccount acc;
-	private AdminMenu admin = new AdminMenu();
 	private BankingMain main = new BankingMain();
 	private CustomerAccount account;
 	
@@ -97,48 +96,46 @@ public class ApplyInterest implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		
 		if(e.getActionCommand().equals("Apply Interest")) {
-			String euro = "\u20ac";
-		 	double interest = 0;
-		 	boolean loop = true;
-		 	acc = customer.findAccount(box.getSelectedItem().toString());
-		 	
-		 	while(loop)
-			{
-				String interestString = JOptionPane.showInputDialog(f,
-						"Enter interest percentage you wish to apply: \n NOTE: Please enter a numerical value. (with no percentage sign) \n E.g: If you wish to apply 8% interest, enter '8'");
-				
-				// the isNumeric method tests to see if the string entered was numeric.
-				if (BankingMain.isNumeric(interestString)) {
-
-					interest = Double.parseDouble(interestString);
-					loop = false;
-
-					acc.setBalance(acc.getBalance() + (acc.getBalance() * (interest / 100)));
-
-					JOptionPane.showMessageDialog(f,
-							interest + "% interest applied. \n new balance = " + acc.getBalance() + euro, "Success!",
-							JOptionPane.INFORMATION_MESSAGE);
-				}
-
-				else {
-					JOptionPane.showMessageDialog(f, "You must enter a numerical value!", "Oops!",
-							JOptionPane.INFORMATION_MESSAGE);
-				}
-
-			}
-		 	
+			applyInterest();
 		 	
 		} else {
 			f.dispose();		
-			admin.adminMenuCreated();
+			AdminMenu.getInstance();
 		}
 
 	}
 	
-	public void applyInterest() {
+	public void applyInterest() { // separated function
 		
+		String euro = "\u20ac";
+	 	double interest = 0;
+	 	boolean loop = true;
+	 	acc = customer.findAccount(box.getSelectedItem().toString());
+	 	
+	 	while(loop)
+		{
+			String interestString = JOptionPane.showInputDialog(f,
+					"Enter interest percentage you wish to apply: \n NOTE: Please enter a numerical value. (with no percentage sign) \n E.g: If you wish to apply 8% interest, enter '8'");
+			
+			// the isNumeric method tests to see if the string entered was numeric.
+			if (BankingMain.isNumeric(interestString)) {
+
+				interest = Double.parseDouble(interestString);
+				loop = false;
+
+				acc.setBalance(acc.getBalance() + (acc.getBalance() * (interest / 100)));
+
+				JOptionPane.showMessageDialog(f,
+						interest + "% interest applied. \n new balance = " + acc.getBalance() + euro, "Success!",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+
+			else {
+				JOptionPane.showMessageDialog(f, "You must enter a numerical value!", "Oops!",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+
+		}
+	 	
 	}
-	
-
-
 }

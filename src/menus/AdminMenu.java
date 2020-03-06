@@ -34,6 +34,7 @@ public class AdminMenu extends JFrame implements ActionListener {
 	Container content;
 
 	private StartMenu start = new StartMenu();
+	private static AdminMenu admin;
 	private BankingMain main;
 	private ArrayList<Customer> customerList;
 
@@ -44,6 +45,14 @@ public class AdminMenu extends JFrame implements ActionListener {
 		if (validateUser()) {
 			adminMenuCreated();
 		}
+	}
+	
+	public static AdminMenu getInstance() {
+		if(admin == null) {
+			admin = new AdminMenu();
+		}
+		
+		return admin;
 	}
 
 	public void adminMenuCreated() {

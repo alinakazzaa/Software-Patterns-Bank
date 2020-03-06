@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
+import actions.NewCustomer;
 import banking.BankingMain;
 import classes.Customer;
 
@@ -69,11 +70,15 @@ public class StartMenu extends JFrame{
 				public void actionPerformed(ActionEvent e) {
 					String user = userType.getSelection().getActionCommand();
 					
-					if(user.equals("New Customer") || user.equals("Customer")) {
+					if(user.equals("Customer")) {
 						f.dispose();
-						new CustomerMenu(user);
+						new CustomerMenu();
 						
-					} else {
+					} else if (user.equals("New Customer")) {
+						f.dispose();
+						new NewCustomer();
+					}
+					else {
 						f.dispose();
 						new AdminMenu();
 							

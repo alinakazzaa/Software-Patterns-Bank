@@ -1,4 +1,4 @@
-package banking;
+package menus;
 
 import java.awt.Container;
 import java.awt.Dimension;
@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,8 +14,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class AdminMenu extends JFrame {
+import classes.Customer;
 
+
+public class AdminMenu extends JFrame {
 	JFrame f, f1;
 	JPanel deleteCustomerPanel, deleteAccountPanel, bankChargesPanel, interestPanel,
 			editCustomerPanel, navigatePanel, summaryPanel, accountPanel, returnPanel;
@@ -22,20 +25,18 @@ public class AdminMenu extends JFrame {
 			summaryButton, accountButton, returnButton;
 	JLabel label1;
 	Container content;
-
-	public AdminMenu(JFrame f) {
-		this.f = f;
-		
-		
-		if(validateUser()) {
-			dispose();
-			adminMenuCreated();
-		}
-		
-		
-		
-	}
+	private ArrayList<Customer>customerList;
+	private StartMenu start = new StartMenu();
 	
+	public AdminMenu() {
+		this.customerList = customerList;
+	
+	if(validateUser()) {
+		adminMenuCreated();
+	}
+		
+}
+
 	public void adminMenuCreated() {
 		f = new JFrame("Administrator Menu");
 		f.setSize(400, 400);
@@ -107,10 +108,8 @@ public class AdminMenu extends JFrame {
 		
 	}
 	
-	
-	
 	public boolean validateUser() {
-		boolean loop = true; boolean loop2 = true; boolean cont = false; boolean isValid = false;
+		boolean loop = true; boolean loop2 = false; boolean cont = false; boolean isValid = false;
 		
 		while (loop) {
 
@@ -125,12 +124,13 @@ public class AdminMenu extends JFrame {
 				}
 
 				else if (reply == JOptionPane.NO_OPTION) {
-					f.dispose();
 					loop = false;
-					loop2 = false;
-					new Menu();
+					start.menuStart();
 				}
+			} else {
+				loop2 = true;
 			}
+			
 
 			while (loop2) {
 				Object adminPassword = JOptionPane.showInputDialog(f, "Enter Administrator Password;");
@@ -142,9 +142,8 @@ public class AdminMenu extends JFrame {
 					if (reply == JOptionPane.YES_OPTION) {
 
 					} else if (reply == JOptionPane.NO_OPTION) {
-						f.dispose();
 						loop2 = false;
-						new Menu();
+						start.menuStart();
 					}
 				} else {
 					loop2 = false;
@@ -153,7 +152,6 @@ public class AdminMenu extends JFrame {
 			}
 
 			if (cont) {
-				f.dispose();
 				loop = false;
 				isValid = true;
 			}

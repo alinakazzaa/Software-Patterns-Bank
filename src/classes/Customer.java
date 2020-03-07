@@ -74,6 +74,21 @@ public class Customer {
 		return this.accounts;
 	}
 	
+	public void addAccount(CustomerAccount account) {
+		this.accounts.add(account);
+	}
+	
+	public CustomerAccount findAccount(String number) {
+		CustomerAccount account = null;
+		
+		for(CustomerAccount acc: this.accounts) {
+			if(acc.getNumber().equals(number)) {
+				account = acc;
+			}
+		}
+		return account;
+	}
+	
 	//mutator methods
 	public void setPPS(String PPS)
 	{
@@ -94,8 +109,6 @@ public class Customer {
 	{
 		this.DOB = DOB;
 	}
-	
-
 
 	
 	public void setCustomerID(String customerID)

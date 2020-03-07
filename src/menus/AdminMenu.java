@@ -20,6 +20,7 @@ import actions.AddAccountToCustomer;
 import actions.ApplyBankCharges;
 import actions.ApplyInterest;
 import actions.BankChargesListener;
+import actions.DeleteAccount;
 import actions.DeleteCustomer;
 import actions.EditCustomer;
 import actions.NavigateCustomerCollection;
@@ -68,7 +69,7 @@ public class AdminMenu extends JFrame implements ActionListener {
 
 	public void adminMenuCreated() {
 		f = new JFrame("Administrator Menu");
-		f.setSize(400, 400);
+		f.setSize(500, 400);
 		f.setLocation(200, 200);
 		f.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
@@ -153,7 +154,7 @@ public class AdminMenu extends JFrame implements ActionListener {
 		content.add(navigatePanel);
 		content.add(summaryPanel);
 		content.add(deleteCustomerPanel);
-//		content.add(deleteAccountPanel);
+		content.add(deleteAccountPanel);
 		content.add(returnPanel);
 
 	}
@@ -278,19 +279,46 @@ public class AdminMenu extends JFrame implements ActionListener {
 					new AddAccountToCustomer(customer);
 					break;
 				case "Apply Bank Charges":
-					new ApplyBankCharges(customer);
+					
+					if(customer.getAccounts().size() > 0) {
+						f.dispose();
+						new ApplyBankCharges(customer);
+					} else {
+						JOptionPane.showMessageDialog(f, "User has no accounts!", "Oops!", JOptionPane.INFORMATION_MESSAGE);
+					}
 					break;
+					
 				case "Apply Interest":
-					f.dispose();
-					new ApplyInterest(customer);
+
+					if(customer.getAccounts().size() > 0) {
+						f.dispose();
+						new ApplyInterest(customer);
+					} else {
+						JOptionPane.showMessageDialog(f, "User has no accounts!", "Oops!", JOptionPane.INFORMATION_MESSAGE);
+					}
 					break;
+					
 				case "Edit existing Customer":
+					
 					f.dispose();
 					new EditCustomer(customer);
 					break;
+					
 				case "Delete Customer":
+					
 					new DeleteCustomer(customer);
 					break;
+					
+				case "Delete Account":
+					
+					if(customer.getAccounts().size() > 0) {
+						f.dispose();
+						new DeleteAccount(customer);
+					} else {
+						JOptionPane.showMessageDialog(f, "User has no accounts!", "Oops!", JOptionPane.INFORMATION_MESSAGE);
+					}
+					break;
+					
 				}
 				
 			}

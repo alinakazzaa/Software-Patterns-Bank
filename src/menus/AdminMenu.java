@@ -22,6 +22,7 @@ import actions.ApplyInterest;
 import actions.BankChargesListener;
 import actions.DeleteCustomer;
 import actions.EditCustomer;
+import actions.NavigateCustomerCollection;
 import banking.BankingMain;
 import classes.Customer;
 
@@ -39,17 +40,26 @@ public class AdminMenu extends JFrame implements ActionListener {
 	private static AdminMenu admin;
 	private BankingMain main;
 	private ArrayList<Customer> customerList;
+	private String adminState;
 
 	public AdminMenu() {
 		main = BankingMain.getInstance();
+		adminState = main.getAdminState();
 		customerList = main.getCustomers();
-
-		if (validateUser()) {
+		
+		if(adminState == null) {
+			if (validateUser()) {
+				adminMenuCreated();
+			}
+		} else {
 			adminMenuCreated();
 		}
+		
+		
 	}
 	
 	public static AdminMenu getInstance() { // avoid log in each time window is called from another action - singleton
+		
 		if(admin == null) {
 			admin = new AdminMenu();
 		}
@@ -58,7 +68,6 @@ public class AdminMenu extends JFrame implements ActionListener {
 	}
 
 	public void adminMenuCreated() {
-		System.out.println(main.getCustomers().toString());
 		f = new JFrame("Administrator Menu");
 		f.setSize(400, 400);
 		f.setLocation(200, 200);
@@ -155,7 +164,9 @@ public class AdminMenu extends JFrame implements ActionListener {
 		boolean loop2 = false;
 		boolean cont = false;
 		boolean isValid = false;
-
+		String adminState;
+		
+		
 		while (loop) {
 
 			Object adminUsername = JOptionPane.showInputDialog(f, "Enter Administrator Username:");
@@ -192,12 +203,15 @@ public class AdminMenu extends JFrame implements ActionListener {
 				} else {
 					loop2 = false;
 					cont = true;
+					adminState = "Username: " + adminUsername.toString() + "/n" + "Password: " + adminPassword.toString();
+					main.setAdminState(adminState);
 				}
 			}
 
 			if (cont) {
 				loop = false;
 				isValid = true;
+				
 			}
 
 		}
@@ -215,6 +229,10 @@ public class AdminMenu extends JFrame implements ActionListener {
 		if (e.getActionCommand().equals("Exit Admin Menu")) {
 			f.dispose();
 			start.menuStart();
+		} else if(e.getActionCommand().equals("Navigate Customer Collection")) {
+			f.dispose();
+			new NavigateCustomerCollection();
+			
 		} else if (customerList.isEmpty()) {
 			JOptionPane.showMessageDialog(f, "There are no customers yet!", "Oops!", JOptionPane.INFORMATION_MESSAGE);
 		} else {
@@ -262,8 +280,6 @@ public class AdminMenu extends JFrame implements ActionListener {
 				case "Edit existing Customer":
 					f.dispose();
 					new EditCustomer(customer);
-					break;
-				case "Navigate Customer Collection":
 					break;
 				case "Display Summary Of All Accounts":
 					break;

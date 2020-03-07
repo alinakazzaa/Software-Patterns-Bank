@@ -44,12 +44,6 @@ public class ApplyInterest implements ActionListener {
 			new AdminMenu();
 		} else {
 			applyInterestCreated();
-			for (int i = 0; i < customer.getAccounts().size(); i++) {
-				if (customer.getAccounts().get(i).getNumber() == box.getSelectedItem()) {
-					acc = customer.getAccounts().get(i);
-				}
-			}	
-
 		}
 
 	}

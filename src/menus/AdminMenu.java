@@ -54,8 +54,6 @@ public class AdminMenu extends JFrame implements ActionListener {
 		} else {
 			adminMenuCreated();
 		}
-		
-		
 	}
 	
 	public static AdminMenu getInstance() { // avoid log in each time window is called from another action - singleton

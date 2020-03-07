@@ -23,6 +23,7 @@ import actions.BankChargesListener;
 import actions.DeleteCustomer;
 import actions.EditCustomer;
 import actions.NavigateCustomerCollection;
+import actions.Summary;
 import banking.BankingMain;
 import classes.Customer;
 
@@ -224,15 +225,23 @@ public class AdminMenu extends JFrame implements ActionListener {
 		boolean loop = true;
 		boolean found = false;
 
-		if (e.getActionCommand().equals("Exit Admin Menu")) {
+		if (customerList.isEmpty()) {
+			JOptionPane.showMessageDialog(f, "There are no customers yet!", "Oops!", JOptionPane.INFORMATION_MESSAGE);
+			
+		} else if (e.getActionCommand().equals("Exit Admin Menu")) {
 			f.dispose();
 			start.menuStart();
+		} else if (customerList.isEmpty()) {
+			JOptionPane.showMessageDialog(f, "There are no customers yet!", "Oops!", JOptionPane.INFORMATION_MESSAGE);
+			
 		} else if(e.getActionCommand().equals("Navigate Customer Collection")) {
 			f.dispose();
 			new NavigateCustomerCollection();
 			
-		} else if (customerList.isEmpty()) {
-			JOptionPane.showMessageDialog(f, "There are no customers yet!", "Oops!", JOptionPane.INFORMATION_MESSAGE);
+		} else if(e.getActionCommand().equals("Display Summary Of All Accounts")) {
+			f.dispose();
+			new Summary();
+			
 		} else {
 
 			while (loop) {
@@ -278,8 +287,6 @@ public class AdminMenu extends JFrame implements ActionListener {
 				case "Edit existing Customer":
 					f.dispose();
 					new EditCustomer(customer);
-					break;
-				case "Display Summary Of All Accounts":
 					break;
 				case "Delete Customer":
 					new DeleteCustomer(customer);

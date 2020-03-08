@@ -77,7 +77,7 @@ public class StartMenu extends JFrame{
 					} else if(user.equals("Customer")) {
 						f.dispose();
 						CustomerMenu.getInstance();
-					}else {
+					} else {
 						f.dispose();
 						AdminMenu.getInstance();
 							

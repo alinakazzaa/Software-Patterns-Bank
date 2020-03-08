@@ -15,6 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import classes.CustomerAccount;
+import menus.CustomerMenu;
+import menus.StartMenu;
 
 public class AccountScreen extends JFrame implements ActionListener {
 	
@@ -83,11 +85,13 @@ public class AccountScreen extends JFrame implements ActionListener {
 		if(e.getActionCommand().equals("Display Bank Statement")) {
 			new Statement(acc);
 		} else if(e.getActionCommand().equals("Lodge money into account")) {
-			
+			new AccountLodgement(acc);
 		} else if (e.getActionCommand().equals("Withdraw money from account")) {
-			
+			new AccountWithdraw(acc);
 		} else {
-			
+			f.dispose();
+			CustomerMenu.getInstance().setCustomer(null);
+			new StartMenu();
 		}
 		
 	}

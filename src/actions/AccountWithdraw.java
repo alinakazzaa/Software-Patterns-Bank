@@ -10,19 +10,19 @@ import classes.CustomerAccount;
 import classes.CustomerCurrentAccount;
 import menus.CustomerMenu;
 
-public class AccountLodgement {
+public class AccountWithdraw {
 
 	private CustomerAccount acc;
 
-	public AccountLodgement(CustomerAccount acc) {
+	public AccountWithdraw(CustomerAccount acc) {
 		this.acc = acc;
-		accountLodgementCreated();
+		accountWithdrawCreated();
 	}
 
-	public void accountLodgementCreated() {
+	public void accountWithdrawCreated() {
 		boolean loop = true;
 		boolean on = true;
-		double balance = 0;
+		double withdraw = 0;
 
 		if (acc instanceof CustomerCurrentAccount) {
 			int count = 3;
@@ -52,47 +52,62 @@ public class AccountLodgement {
 						count--;
 						JOptionPane.showMessageDialog(null, "Incorrect pin. " + count + " attempts remaining.", "Pin",
 								JOptionPane.INFORMATION_MESSAGE);
+
 					}
 
 				}
 			}
-
 		}
-		if (on == true) {
-			String balanceTest = JOptionPane.showInputDialog(null, "Enter amount you wish to lodge:");// the isNumeric
-																										// method tests
-																										// to see if the
-																										// string
-																										// entered was
-																										// numeric.
 
+		if (on == true) {
+			String balanceTest = JOptionPane.showInputDialog(null, "Enter amount you wish to withdraw (max 500):");// the
+																													// isNumeric
+																													// method
+																													// tests
+																													// to
+																													// see
+																													// if
+																													// the
+																													// string
+																													// entered
+																													// was
+																													// numeric.
 			if (BankingMain.isNumeric(balanceTest)) {
 
-				balance = Double.parseDouble(balanceTest);
+				withdraw = Double.parseDouble(balanceTest);
 				loop = false;
 
 			} else {
 				JOptionPane.showMessageDialog(null, "You must enter a numerical value!", "Oops!",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
+			if (withdraw > 500) {
+				JOptionPane.showMessageDialog(null, "500 is the maximum you can withdraw at a time.", "Oops!",
+						JOptionPane.INFORMATION_MESSAGE);
+				withdraw = 0;
+			}
+			if (withdraw > acc.getBalance()) {
+				JOptionPane.showMessageDialog(null, "Insufficient funds.", "Oops!", JOptionPane.INFORMATION_MESSAGE);
+				withdraw = 0;
+			}
 
 			String euro = "\u20ac";
-			acc.setBalance(acc.getBalance() + balance);
-			// String date = new
-			// SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+			acc.setBalance(acc.getBalance() - withdraw);
+			// recording transaction:
+//		String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 			Date date = new Date();
 			String date2 = date.toString();
-			String type = "Lodgement";
-			double amount = balance;
+
+			String type = "Withdraw";
+			double amount = withdraw;
 
 			AccountTransaction transaction = new AccountTransaction(date2, type, amount);
 			acc.getTransactionList().add(transaction);
 
-			JOptionPane.showMessageDialog(null, balance + euro + " added do you account!", "Lodgement",
+			JOptionPane.showMessageDialog(null, withdraw + euro + " withdrawn.", "Withdraw",
 					JOptionPane.INFORMATION_MESSAGE);
-			JOptionPane.showMessageDialog(null, "New balance = " + acc.getBalance() + euro, "Lodgement",
+			JOptionPane.showMessageDialog(null, "New balance = " + acc.getBalance() + euro, "Withdraw",
 					JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
-
 }

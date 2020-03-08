@@ -16,13 +16,13 @@ import classes.Customer;
 
 public class StartMenu extends JFrame{
 	
-	JFrame f, f1;
+		JFrame f, f1;
 		JLabel customerIDLabel, passwordLabel;
 		JTextField customerIDTextField, passwordTextField;
 		Container content;
 		Customer e;
 
-	 JPanel panel2;
+		JPanel panel2;
 		JButton add;
 		String 	PPS,firstName,surname,DOB,CustomerID;
 		

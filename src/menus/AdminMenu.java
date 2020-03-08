@@ -26,6 +26,10 @@ import actions.NavigateCustomerCollection;
 import actions.Summary;
 import banking.BankingMain;
 import classes.Customer;
+import dialog.ConfirmDialog;
+import dialog.DialogFrame;
+import dialog.InputDialog;
+import dialog.MessageDialog;
 
 public class AdminMenu extends JFrame implements ActionListener {
 	
@@ -42,6 +46,9 @@ public class AdminMenu extends JFrame implements ActionListener {
 	private BankingMain main;
 	private ArrayList<Customer> customerList;
 	private String adminState;
+	private String message;
+	private String title = "Oops!";
+	private DialogFrame dialog;
 
 	public AdminMenu() {
 
@@ -164,22 +171,23 @@ public class AdminMenu extends JFrame implements ActionListener {
 		boolean loop2 = false;
 		boolean cont = false;
 		boolean isValid = false;
-		String adminState;
+		String adminState, username, password;
 		
 		
 		while (loop) {
 
-			Object adminUsername = JOptionPane.showInputDialog(f, "Enter Administrator Username:");
+			dialog = new InputDialog(null, "Enter Administrator Username:");
+			username = (String) ((InputDialog) dialog).getInput();
+			
+			if (!username.equals("admin")) {
 
-			if (!adminUsername.equals("admin")) {
-
-				int reply = JOptionPane.showConfirmDialog(null, null, "Incorrect Username. Try again?",
-						JOptionPane.YES_NO_OPTION);
-				if (reply == JOptionPane.YES_OPTION) {
+				dialog = new ConfirmDialog(title, "Incorrect Username. Try again?");
+				
+				if (((ConfirmDialog) dialog).getReply() == 0) {
 					loop = true;
 				}
 
-				else if (reply == JOptionPane.NO_OPTION) {
+				else if (((ConfirmDialog) dialog).getReply() == 1) {
 					loop = false;
 					start.menuStart();
 				}
@@ -188,22 +196,25 @@ public class AdminMenu extends JFrame implements ActionListener {
 			}
 
 			while (loop2) {
-				Object adminPassword = JOptionPane.showInputDialog(f, "Enter Administrator Password;");
-
-				if (!adminPassword.equals("admin11"))// search admin list for admin with matching admin password
+				
+				dialog = new InputDialog(null, "Enter Administrator Password;");
+				password = (String) ((InputDialog) dialog).getInput();
+				
+				if (!password.equals("admin11"))// search admin list for admin with matching admin password
 				{
-					int reply = JOptionPane.showConfirmDialog(null, null, "Incorrect Password. Try again?",
-							JOptionPane.YES_NO_OPTION);
-					if (reply == JOptionPane.YES_OPTION) {
+					
+					dialog = new ConfirmDialog(title, "Incorrect Password. Try again?");
+					
+					if (((ConfirmDialog) dialog).getReply() == 0) {
 
-					} else if (reply == JOptionPane.NO_OPTION) {
+					} else if (((ConfirmDialog) dialog).getReply() == 1) {
 						loop2 = false;
 						start.menuStart();
 					}
 				} else {
 					loop2 = false;
 					cont = true;
-					adminState = "Username: " + adminUsername.toString() + "/n" + "Password: " + adminPassword.toString();
+					adminState = "Username: " + username + "/n" + "Password: " + password;
 					setAdminState(adminState);
 				}
 			}
@@ -221,19 +232,22 @@ public class AdminMenu extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
+		
+		String customerID;
 		Customer customer = null;
 		boolean loop = true;
 		boolean found = false;
 
 		if (customerList.isEmpty()) {
-			JOptionPane.showMessageDialog(f, "There are no customers yet!", "Oops!", JOptionPane.INFORMATION_MESSAGE);
+			
+			dialog = new MessageDialog(title, "There are no customers yet!");
 			
 		} else if (e.getActionCommand().equals("Exit Admin Menu")) {
 			f.dispose();
 			start.menuStart();
 		} else if (customerList.isEmpty()) {
-			JOptionPane.showMessageDialog(f, "There are no customers yet!", "Oops!", JOptionPane.INFORMATION_MESSAGE);
+			
+			dialog = new MessageDialog(title, "There are no customers yet!");
 			
 		} else if(e.getActionCommand().equals("Navigate Customer Collection")) {
 			f.dispose();
@@ -246,10 +260,9 @@ public class AdminMenu extends JFrame implements ActionListener {
 		} else {
 
 			while (loop) {
-
-				String customerID = JOptionPane.showInputDialog(f,
-						"Customer ID:");
-
+				
+				dialog = new InputDialog(null, "Customer ID:");
+				customerID = (String) ((InputDialog) dialog).getInput();
 				if (customerID.isEmpty() || customerID == null) {
 					System.out.println("empty");
 				} else {
@@ -261,10 +274,9 @@ public class AdminMenu extends JFrame implements ActionListener {
 						found = true;
 
 					} else {
-
-						int reply = JOptionPane.showConfirmDialog(null, null, "User not found. Try again?",
-								JOptionPane.YES_NO_OPTION);
-						if (reply != JOptionPane.YES_OPTION) {
+						dialog = new ConfirmDialog(null, "User not found. Try again?");
+						
+						if (((ConfirmDialog) dialog).getReply() != 0) {
 							loop = false;
 						}
 					}
@@ -284,7 +296,8 @@ public class AdminMenu extends JFrame implements ActionListener {
 						f.dispose();
 						new ApplyBankCharges(customer);
 					} else {
-						JOptionPane.showMessageDialog(f, "User has no accounts!", "Oops!", JOptionPane.INFORMATION_MESSAGE);
+						
+						dialog = new MessageDialog(title, "User has no accounts!");
 					}
 					break;
 					
@@ -294,7 +307,8 @@ public class AdminMenu extends JFrame implements ActionListener {
 						f.dispose();
 						new ApplyInterest(customer);
 					} else {
-						JOptionPane.showMessageDialog(f, "User has no accounts!", "Oops!", JOptionPane.INFORMATION_MESSAGE);
+						
+						dialog = new MessageDialog(title, "User has no accounts!");
 					}
 					break;
 					
@@ -315,7 +329,8 @@ public class AdminMenu extends JFrame implements ActionListener {
 						f.dispose();
 						new DeleteAccount(customer);
 					} else {
-						JOptionPane.showMessageDialog(f, "User has no accounts!", "Oops!", JOptionPane.INFORMATION_MESSAGE);
+						
+						dialog = new MessageDialog(title, "User has no accounts!");
 					}
 					break;
 					

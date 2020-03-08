@@ -3,9 +3,8 @@ package dialog;
 public class DialogFrame implements Dialog {
 	
 	private String title, message;
-	private int reply;
-	
-    public DialogFrame(String title, String message) {
+
+	public DialogFrame(String title, String message) {
         setTitle(title);
         setMessage(message);
     }
@@ -30,13 +29,5 @@ public class DialogFrame implements Dialog {
 
 	public void setMessage(String message) {
 		this.message = message;
-	}
-	
-	public int getReply() {
-		return reply;
-	}
-
-	public void setReply(int reply) {
-		this.reply = reply;
 	}
 }

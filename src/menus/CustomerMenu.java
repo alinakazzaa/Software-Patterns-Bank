@@ -18,6 +18,10 @@ import actions.AccountScreen;
 import banking.BankingMain;
 import classes.Customer;
 import classes.CustomerAccount;
+import dialog.ConfirmDialog;
+import dialog.DialogFrame;
+import dialog.InputDialog;
+import dialog.MessageDialog;
 
 public class CustomerMenu extends JFrame implements ActionListener {
 
@@ -34,7 +38,9 @@ public class CustomerMenu extends JFrame implements ActionListener {
 	private BankingMain main;
 	private Customer customer;
 	private CustomerAccount acc;
+	private DialogFrame dialog;
 	JComboBox<String> box;
+	private String message, title;
 
 	public CustomerMenu() {
 		main = BankingMain.getInstance();
@@ -47,8 +53,6 @@ public class CustomerMenu extends JFrame implements ActionListener {
 		} else {
 			customerMenuCreated();
 		}
-		
-		System.out.println(this.customer);
 		
 	}
 	
@@ -74,9 +78,11 @@ public class CustomerMenu extends JFrame implements ActionListener {
 		f.setVisible(true);
 
 		if (customer.getAccounts().size() == 0) {
-			JOptionPane.showMessageDialog(f,
-					"This customer does not have any accounts yet. \n An admin must create an account for this customer \n for them to be able to use customer functionality. ",
-					"Oops!", JOptionPane.INFORMATION_MESSAGE);
+			
+			message = "This customer does not have any accounts yet.\n An admin must create an account for this customer\n for them to be able to use customer functionality.";
+			title = "Oops!";
+			dialog = new MessageDialog(title, message);
+			
 			f.dispose();
 			start.menuStart();
 		} else {
@@ -133,19 +139,25 @@ public class CustomerMenu extends JFrame implements ActionListener {
 		boolean cont = false;
 		boolean found = false;
 		Customer customer = null;
+		String customerPassword, customerID;
 		
 		if(main.getCustomers().size() > 0) {
 			
 			while (loop) {
-				Object customerID = JOptionPane.showInputDialog(f, "Enter Customer ID:");
-				customer = main.getCustomerByID(customerID.toString());
+				dialog = new InputDialog(null, "Enter Customer ID:");
+				customerID = (String) ((InputDialog) dialog).getInput();
+				
+				customer = main.getCustomerByID(customerID);
 				
 					if(customer == null) {
-						int reply = JOptionPane.showConfirmDialog(null, null, "User not found. Try again?",
-								JOptionPane.YES_NO_OPTION);
-						if (reply == JOptionPane.YES_OPTION) {
+						
+						title = "Oops!";
+						message = "User not found. Try again?";
+						dialog = new ConfirmDialog(title, message);
+						
+						if (((ConfirmDialog) dialog).getReply() == 0) {
 							loop = true;
-						} else if (reply == JOptionPane.NO_OPTION) {
+						} else if (((ConfirmDialog) dialog).getReply() == 1) {
 							loop = false;
 							loop2 = false;
 							start.menuStart();
@@ -154,15 +166,19 @@ public class CustomerMenu extends JFrame implements ActionListener {
 						loop = false;
 						
 						while (loop2) {
-							Object customerPassword = JOptionPane.showInputDialog(f, "Enter Customer Password;");
+							dialog = new InputDialog(null, "Enter Customer Password;");
+							customerPassword = (String) ((InputDialog) dialog).getInput();
 							
 							if (!customer.getPassword().equals(customerPassword))// check if custoemr password is correct
 							{
-								int reply = JOptionPane.showConfirmDialog(null, null, "Incorrect password. Try again?",
-										JOptionPane.YES_NO_OPTION);
-								if (reply == JOptionPane.YES_OPTION) {
+								title = "Oops!";
+								message = "Incorrect password. Try again?";
+								dialog = new ConfirmDialog(title, message);
+								dialog.showDialog();
+								
+								if (((ConfirmDialog) dialog).getReply() == 0) {
 
-								} else if (reply == JOptionPane.NO_OPTION) {
+								} else if (((ConfirmDialog) dialog).getReply() == 1) {
 									loop2 = false;
 									start.menuStart();
 								}

@@ -7,6 +7,7 @@ public class MessageDialog extends DialogFrame {
 	
 	public MessageDialog(String title, String message) {
 		super(title, message);
+		showDialog();
 	}
 	
 	public void showDialog() {

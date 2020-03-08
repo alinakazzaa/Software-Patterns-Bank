@@ -1,16 +1,16 @@
 package dialog;
 
-import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
-public class MessageDialog implements Dialog {
-	
-	private String message;
-	JFrame frame;
+public class MessageDialog extends DialogFrame {
 	
 	
-	public MessageDialog() {
-		super();
-		
+	public MessageDialog(String title, String message) {
+		super(title, message);
+	}
+	
+	public void showDialog() {
+		JOptionPane.showMessageDialog(null, this.getMessage(), this.getTitle(), JOptionPane.INFORMATION_MESSAGE);
 	}
 
 }

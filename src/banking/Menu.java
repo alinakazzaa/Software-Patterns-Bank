@@ -38,65 +38,6 @@
 //	JRadioButton radioButton;
 //	
 
-
-//	
-//	public void customer(Customer e1)
-//	{	
-//		f = new JFrame("Customer Menu");
-//		e1 = e;
-//		f.setSize(400, 300);
-//		f.setLocation(200, 200);
-//		f.addWindowListener(new WindowAdapter() {
-//			public void windowClosing(WindowEvent we) { System.exit(0); }
-//		});          
-//		f.setVisible(true);
-//		
-//		if(e.getAccounts().size() == 0)
-//		{
-//			JOptionPane.showMessageDialog(f, "This customer does not have any accounts yet. \n An admin must create an account for this customer \n for them to be able to use customer functionality. " ,"Oops!",  JOptionPane.INFORMATION_MESSAGE);
-//			f.dispose();				
-//			menuStart();
-//		}
-//		else
-//		{
-//		JPanel buttonPanel = new JPanel();
-//		JPanel boxPanel = new JPanel();
-//		JPanel labelPanel = new JPanel();
-//		
-//		JLabel label = new JLabel("Select Account:");
-//		labelPanel.add(label);
-//		
-//		JButton returnButton = new JButton("Return");
-//		buttonPanel.add(returnButton);
-//		JButton continueButton = new JButton("Continue");
-//		buttonPanel.add(continueButton);
-//		
-//		JComboBox<String> box = new JComboBox<String>();
-//	    for (int i =0; i < e.getAccounts().size(); i++)
-//	    {
-//	     box.addItem(e.getAccounts().get(i).getNumber());
-//	    }
-//		
-//	    
-//	   
-//	    for(int i = 0; i<e.getAccounts().size(); i++)
-//	    {
-//	    	if(e.getAccounts().get(i).getNumber() == box.getSelectedItem() )
-//	    	{
-//	    		acc = e.getAccounts().get(i);
-//	    	}
-//	    }
-//	    
-//	    
-//	    
-//	
-//	    
-//		boxPanel.add(box);
-//		content = f.getContentPane();
-//		content.setLayout(new GridLayout(3, 1));
-//		content.add(labelPanel);
-//		content.add(boxPanel);
-//		content.add(buttonPanel);
 //		
 //		returnButton.addActionListener(new ActionListener(  ) {
 //			public void actionPerformed(ActionEvent ae) {
@@ -385,13 +326,6 @@
 //			}	
 //	     });
 //		
-//		returnButton.addActionListener(new ActionListener(  ) {
-//			public void actionPerformed(ActionEvent ae) {
-//				f.dispose();		
-//				menuStart();				
-//			}
-//	     });		}		
-//	     });
 //	}
 //	}
 //	

@@ -19,7 +19,6 @@ import javax.swing.JPanel;
 import actions.AddAccountToCustomer;
 import actions.ApplyBankCharges;
 import actions.ApplyInterest;
-import actions.BankChargesListener;
 import actions.DeleteAccount;
 import actions.DeleteCustomer;
 import actions.EditCustomer;
@@ -45,8 +44,8 @@ public class AdminMenu extends JFrame implements ActionListener {
 	private String adminState;
 
 	public AdminMenu() {
+
 		main = BankingMain.getInstance();
-		adminState = main.getAdminState();
 		customerList = main.getCustomers();
 		
 		if(adminState == null) {
@@ -68,6 +67,7 @@ public class AdminMenu extends JFrame implements ActionListener {
 	}
 
 	public void adminMenuCreated() {
+		
 		f = new JFrame("Administrator Menu");
 		f.setSize(500, 400);
 		f.setLocation(200, 200);
@@ -204,7 +204,7 @@ public class AdminMenu extends JFrame implements ActionListener {
 					loop2 = false;
 					cont = true;
 					adminState = "Username: " + adminUsername.toString() + "/n" + "Password: " + adminPassword.toString();
-					main.setAdminState(adminState);
+					setAdminState(adminState);
 				}
 			}
 
@@ -324,6 +324,14 @@ public class AdminMenu extends JFrame implements ActionListener {
 			}
 
 		}
+	}
+	
+	public void setAdminState(String adminState) {
+		this.adminState = adminState;
+	}
+	
+	public String getAdminState() {
+		return this.adminState;
 	}
 
 }

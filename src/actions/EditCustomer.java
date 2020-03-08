@@ -117,13 +117,12 @@ public class EditCustomer implements ActionListener {
 			f.dispose();
 			
 			JOptionPane.showMessageDialog(null, "Changes Saved.");
-			AdminMenu.getInstance();
 
 		} else {
 			f.dispose();
-			AdminMenu.getInstance();
 		}
-
+		
+		AdminMenu.getInstance();
 	}
 
 }

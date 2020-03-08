@@ -41,7 +41,7 @@ public class ApplyInterest implements ActionListener {
 					"This customer has no accounts! \n The admin must add acounts to this customer.", "Oops!",
 					JOptionPane.INFORMATION_MESSAGE);
 			f.dispose();
-			new AdminMenu();
+			AdminMenu.getInstance();
 		} else {
 			applyInterestCreated();
 		}

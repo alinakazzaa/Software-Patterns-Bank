@@ -8,7 +8,7 @@ public class InputDialog extends DialogFrame {
 	
 	public InputDialog(String title, String message) {
 		super(title, message);
-		
+		showDialog();
 	}
 	
 	public void showDialog() {

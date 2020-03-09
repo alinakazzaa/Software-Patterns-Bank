@@ -6,24 +6,20 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import actions.AddAccountToCustomer;
-import actions.ApplyBankCharges;
-import actions.ApplyInterest;
-import actions.DeleteAccount;
-import actions.DeleteCustomer;
-import actions.EditCustomer;
-import actions.NavigateCustomerCollection;
-import actions.Summary;
+import admin.ApplyBankCharges;
+import admin.ApplyInterest;
+import admin.DeleteAccount;
+import admin.DeleteCustomer;
+import admin.EditCustomer;
+import admin.NavigateCustomers;
+import admin.AccountSummary;
+import admin.AddCustomerAccount;
 import banking.BankingMain;
 import classes.Customer;
 import dialog.ConfirmDialog;
@@ -31,9 +27,8 @@ import dialog.DialogFrame;
 import dialog.InputDialog;
 import dialog.MessageDialog;
 
-public class AdminMenu extends JFrame implements ActionListener {
+public class AdminMenu implements ActionListener {
 	
-	JFrame f;
 	JPanel deleteCustomerPanel, deleteAccountPanel, bankChargesPanel, interestPanel, editCustomerPanel, navigatePanel,
 			summaryPanel, accountPanel, returnPanel;
 	JButton deleteCustomer, deleteAccount, bankChargesButton, interestButton, editCustomerButton, navigateButton,
@@ -46,7 +41,6 @@ public class AdminMenu extends JFrame implements ActionListener {
 	private BankingMain main;
 	private ArrayList<Customer> customerList;
 	private String adminState;
-	private String message;
 	private String title = "Oops!";
 	private DialogFrame dialog;
 
@@ -74,17 +68,7 @@ public class AdminMenu extends JFrame implements ActionListener {
 	}
 
 	public void adminMenuCreated() {
-		
-		f = new JFrame("Administrator Menu");
-		f.setSize(500, 400);
-		f.setLocation(200, 200);
-		f.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent we) {
-				System.exit(0);
-			}
-		});
-		
-		f.setVisible(true);
+		main.createFrame("Administrator Menu");
 
 		// keep buttons together for validation of customer list size later
 		deleteCustomer = new JButton("Delete Customer");
@@ -151,7 +135,7 @@ public class AdminMenu extends JFrame implements ActionListener {
 
 		label1 = new JLabel("Please select an option");
 
-		content = f.getContentPane();
+		content = main.getFrame().getContentPane();
 		content.setLayout(new GridLayout(9, 1));
 		content.add(label1);
 		content.add(accountPanel);
@@ -163,6 +147,8 @@ public class AdminMenu extends JFrame implements ActionListener {
 		content.add(deleteCustomerPanel);
 		content.add(deleteAccountPanel);
 		content.add(returnPanel);
+		
+		main.getFrame().setVisible(true);
 
 	}
 
@@ -240,33 +226,32 @@ public class AdminMenu extends JFrame implements ActionListener {
 
 		if (customerList.isEmpty()) {
 			
-			dialog = new MessageDialog(title, "There are no customers yet!");
+			new MessageDialog(title, "There are no customers yet!");
 			
 		} else if (e.getActionCommand().equals("Exit Admin Menu")) {
-			f.dispose();
+			
+			main.getFrame().dispose();
 			start.menuStart();
+			
 		} else if (customerList.isEmpty()) {
 			
-			dialog = new MessageDialog(title, "There are no customers yet!");
+			new MessageDialog(title, "There are no customers yet!");
 			
 		} else if(e.getActionCommand().equals("Navigate Customer Collection")) {
-			f.dispose();
-			new NavigateCustomerCollection();
+			new NavigateCustomers();
 			
 		} else if(e.getActionCommand().equals("Display Summary Of All Accounts")) {
-			f.dispose();
-			new Summary();
+			new AccountSummary();
 			
 		} else {
 
 			while (loop) {
 				
 				dialog = new InputDialog(null, "Customer ID:");
+				
 				customerID = (String) ((InputDialog) dialog).getInput();
-				if (customerID.isEmpty() || customerID == null) {
-					System.out.println("empty");
-				} else {
-					
+				
+				if (!customerID.isEmpty() && customerID != null) {
 					customer = main.getCustomerByID(customerID);
 
 					if (customer != null) {
@@ -280,7 +265,6 @@ public class AdminMenu extends JFrame implements ActionListener {
 							loop = false;
 						}
 					}
-
 				}
 
 			}
@@ -288,33 +272,30 @@ public class AdminMenu extends JFrame implements ActionListener {
 			if (found) {
 				switch (e.getActionCommand()) {
 				case "Add an Account to a Customer":
-					new AddAccountToCustomer(customer);
+					new AddCustomerAccount(customer);
 					break;
 				case "Apply Bank Charges":
 					
 					if(customer.getAccounts().size() > 0) {
-						f.dispose();
 						new ApplyBankCharges(customer);
 					} else {
 						
-						dialog = new MessageDialog(title, "User has no accounts!");
+						new MessageDialog(title, "User has no accounts!");
 					}
 					break;
 					
 				case "Apply Interest":
 
 					if(customer.getAccounts().size() > 0) {
-						f.dispose();
 						new ApplyInterest(customer);
 					} else {
 						
-						dialog = new MessageDialog(title, "User has no accounts!");
+						new MessageDialog(title, "User has no accounts!");
 					}
 					break;
 					
 				case "Edit existing Customer":
-					
-					f.dispose();
+
 					new EditCustomer(customer);
 					break;
 					
@@ -326,11 +307,11 @@ public class AdminMenu extends JFrame implements ActionListener {
 				case "Delete Account":
 					
 					if(customer.getAccounts().size() > 0) {
-						f.dispose();
+						
 						new DeleteAccount(customer);
 					} else {
 						
-						dialog = new MessageDialog(title, "User has no accounts!");
+						new MessageDialog(title, "User has no accounts!");
 					}
 					break;
 					

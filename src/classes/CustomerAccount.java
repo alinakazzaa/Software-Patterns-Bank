@@ -40,7 +40,7 @@ public class CustomerAccount  {
 		return this.balance;
 	}
 	
-	public ArrayList getTransactionList()
+	public ArrayList<AccountTransaction> getTransactionList()
 	{
 		return this.transactionList;
 	}
@@ -56,9 +56,14 @@ public class CustomerAccount  {
 		this.balance = balance;
 	}
 	
-	public void setTransactionList(ArrayList transactionList)
+	public void setTransactionList(ArrayList<AccountTransaction> transactionList)
 	{
 		this.transactionList = transactionList;
+	}
+	
+	public void addTransaction(AccountTransaction transaction)
+	{
+		this.transactionList.add(transaction);
 	}
 	
 	

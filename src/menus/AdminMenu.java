@@ -21,13 +21,14 @@ import admin.NavigateCustomers;
 import admin.AccountSummary;
 import admin.AddCustomerAccount;
 import banking.BankingMain;
+import banking.UserLogin;
 import classes.Customer;
 import dialog.ConfirmDialog;
 import dialog.DialogFrame;
 import dialog.InputDialog;
 import dialog.MessageDialog;
 
-public class AdminMenu implements ActionListener {
+public class AdminMenu implements ActionListener, UserMenu {
 
 	JPanel deleteCustomerPanel, deleteAccountPanel, bankChargesPanel, interestPanel, editCustomerPanel, navigatePanel,
 			summaryPanel, accountPanel, returnPanel;
@@ -43,14 +44,17 @@ public class AdminMenu implements ActionListener {
 	private String adminState;
 	private String title = "Oops!";
 	private DialogFrame dialog;
+	private UserLogin login;
+	private Customer customer = null;
 
 	public AdminMenu() {
 
 		main = BankingMain.getInstance();
 		customerList = main.getCustomers();
+		login = new UserLogin();
 
 		if (adminState == null) {
-			if (validateUser()) {
+			if (logIn()) {
 				adminMenuCreated();
 			}
 		} else {
@@ -152,84 +156,8 @@ public class AdminMenu implements ActionListener {
 
 	}
 
-	public boolean validateUser() {
-		boolean loop = true;
-		boolean loop2 = false;
-		boolean cont = false;
-		boolean isValid = false;
-		String adminState, username, password;
-
-		while (loop) {
-
-			dialog = new InputDialog(null, "Enter Administrator Username:");
-			
-			if(((InputDialog) dialog).getInput() != null && !((InputDialog) dialog).getInput().equals("")) {
-				
-				username = (String) ((InputDialog) dialog).getInput();
-
-				if (!username.equals("admin")) {
-
-					dialog = new ConfirmDialog(title, "Incorrect Username. Try again?");
-
-					if (((ConfirmDialog) dialog).getReply() == 0) {
-						loop = true;
-					}
-
-					else if (((ConfirmDialog) dialog).getReply() == 1) {
-						loop = false;
-						start.menuStart();
-					}
-				} else {
-					loop2 = true;
-				}
-
-				while (loop2) {
-
-					dialog = new InputDialog(null, "Enter Administrator Password;");
-					password = (String) ((InputDialog) dialog).getInput();
-
-					if (!password.equals("admin11"))// search admin list for admin with matching admin password
-					{
-
-						dialog = new ConfirmDialog(title, "Incorrect Password. Try again?");
-
-						if (((ConfirmDialog) dialog).getReply() == 0) {
-
-						} else if (((ConfirmDialog) dialog).getReply() == 1) {
-							loop2 = false;
-							start.menuStart();
-						}
-					} else {
-						loop2 = false;
-						cont = true;
-						adminState = "Username: " + username + "/n" + "Password: " + password;
-						setAdminState(adminState);
-					}
-				}
-
-				if (cont) {
-					loop = false;
-					isValid = true;
-
-				}
-			} else {
-				loop = false;
-			}
-			
-			
-
-		}
-
-		return isValid;
-	}
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
-		String customerID;
-		Customer customer = null;
-		boolean loop = true;
-		boolean found = false;
 
 		if (e.getActionCommand().equals("Exit Admin Menu")) {
 
@@ -252,31 +180,7 @@ public class AdminMenu implements ActionListener {
 
 		} else {
 
-			while (loop) {
-
-				dialog = new InputDialog(null, "Customer ID:");
-
-				customerID = (String) ((InputDialog) dialog).getInput();
-
-				if (!customerID.isEmpty() && customerID != null) {
-					customer = main.getCustomerByID(customerID);
-
-					if (customer != null) {
-						loop = false;
-						found = true;
-
-					} else {
-						dialog = new ConfirmDialog(null, "User not found. Try again?");
-
-						if (((ConfirmDialog) dialog).getReply() != 0) {
-							loop = false;
-						}
-					}
-				}
-
-			}
-
-			if (found) {
+			if (foundCustomer()) {
 				switch (e.getActionCommand()) {
 				case "Add an Account to a Customer":
 					new AddCustomerAccount(customer);
@@ -335,6 +239,73 @@ public class AdminMenu implements ActionListener {
 
 	public String getAdminState() {
 		return this.adminState;
+	}
+
+	@Override
+	public void createMenu() {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public boolean logIn() {
+		boolean tryAgain = true;
+		boolean isValid = false;
+		
+		String adminState;
+
+		while (tryAgain) {
+			
+			if(login.validAdmin()) {
+				if(login.validPassword("Admin")) {
+					isValid = true;
+					tryAgain = false;
+					adminState = "Username: admin/n" + "Password: admin11";
+					setAdminState(adminState);
+				}
+				
+			} else {
+				dialog = new ConfirmDialog(title, "Incorrect Username. Try again?");
+				if (((ConfirmDialog) dialog).getReply() == 1) {
+					tryAgain = false;
+					start.menuStart();
+				}
+			}
+			
+		}
+
+		return isValid;
+	}
+	
+	public boolean foundCustomer() {
+		boolean found = false; boolean search = true;
+		String customerID;
+		
+		while (search) {
+
+			dialog = new InputDialog(null, "Customer ID:");
+
+			customerID = (String) ((InputDialog) dialog).getInput();
+
+			if (!customerID.isEmpty() && customerID != null) {
+				customer = main.getCustomerByID(customerID);
+
+				if (customer != null) {
+					found = true;
+					search = false;
+
+				} else {
+					dialog = new ConfirmDialog(null, "User not found. Try again?");
+
+					if (((ConfirmDialog) dialog).getReply() != 0) {
+						search = false;
+					}
+				}
+			}
+
+		}
+		
+		
+		return found;
 	}
 
 }

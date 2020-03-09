@@ -9,15 +9,14 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import banking.BankingMain;
+import banking.UserLogin;
 import classes.Customer;
 import classes.CustomerAccount;
 import customer.CustomerAccounts;
 import dialog.ConfirmDialog;
 import dialog.DialogFrame;
-import dialog.InputDialog;
 
-public class CustomerMenu implements ActionListener {
+public class CustomerMenu implements ActionListener, UserMenu {
 
 	private static CustomerMenu cusMenu;
 	String userType;
@@ -28,16 +27,16 @@ public class CustomerMenu implements ActionListener {
 	JLabel label;
 	
 	private StartMenu start;
-	private BankingMain main;
 	private Customer customer;
 	private CustomerAccount acc;
 	private DialogFrame dialog;
 	JComboBox<String> box;
 	private String title = "Oops!";
+	private UserLogin login;
 
 	public CustomerMenu() {
-		main = BankingMain.getInstance();
 		start = new StartMenu();
+		login = new UserLogin();
 		
 		if(customer == null) {
 			if(customerLogIn()) {
@@ -71,73 +70,31 @@ public class CustomerMenu implements ActionListener {
 	}
 	
 	public boolean customerLogIn() {
-		boolean loop = true, loop2 = false;
-		boolean cont = false;
-		boolean found = false;
+		boolean tryAgain = true;
+		boolean isValid = false;
+		
 		Customer customer = null;
-		String customerPassword, customerID;
+
+		while (tryAgain) {
 			
-			while (loop) {
-				// reusable components
-				dialog = new InputDialog(null, "Enter Customer ID:");
-				
-				if(((InputDialog) dialog).getInput() != null && !((InputDialog) dialog).getInput().equals("")) {
-					
-					customerID = (String) ((InputDialog) dialog).getInput();
-					
-					customer = main.getCustomerByID(customerID);
-					
-						if(customer == null) {
-							// reusable components
-							dialog = new ConfirmDialog(title, "User not found. Try again?");
-							
-							if (((ConfirmDialog) dialog).getReply() == 0) {
-								loop = true;
-							} else {
-								loop = false;
-								loop2 = false;
-								start.menuStart();
-							}
-						} else {
-							loop = false;
-							loop2 = true;
-							
-							while (loop2) {
-								// reusable components
-								dialog = new InputDialog(null, "Enter Customer Password;");
-								customerPassword = (String) ((InputDialog) dialog).getInput();
-								
-								if (!customer.getPassword().equals(customerPassword))// check if custoemr password is correct
-								{
-									// reusable components
-									new ConfirmDialog(title, "Incorrect password. Try again?");
-									
-									if (((ConfirmDialog) dialog).getReply() == 0) {
-
-									} else {
-										loop2 = false;
-										start.menuStart();
-									}
-								} else {
-									loop2 = false;
-									cont = true;
-								}
-							}
-
-							if (cont) {
-								found = true;
-								setCustomer(customer);
-							}
-						}
-				} else {
-					loop = false;
+			if(login.validCustomer()) {
+				if(login.validPassword("Customer")) {
+					isValid = true;
+					tryAgain = false;
+					setCustomer(customer);
 				}
 				
-				
-
+			} else {
+				dialog = new ConfirmDialog(title, "User not found. Try again?");
+				if (((ConfirmDialog) dialog).getReply() == 1) {
+					tryAgain = false;
+					start.menuStart();
+				}
 			}
-		
-		return found;
+			
+		}
+
+		return isValid;
 		
 	}
 	
@@ -148,6 +105,18 @@ public class CustomerMenu implements ActionListener {
 	
 	public Customer getCustomer() {
 		return this.customer;
+	}
+
+	@Override
+	public void createMenu() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean logIn() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

@@ -1,8 +1,7 @@
 package factory;
 
 import menus.CustomerMenu;
-import menus.NewCustomer;
-import menus.UserMenu;
+import customer.AddNewCustomer;
 
 public class CustomerFactory extends UserFactory {
 
@@ -16,7 +15,7 @@ public class CustomerFactory extends UserFactory {
 	public void getMenu() {
 		
 		if(isNew) {
-			NewCustomer.getInstance();
+			AddNewCustomer.getInstance();
 		} else {
 			CustomerMenu.getInstance();
 		}

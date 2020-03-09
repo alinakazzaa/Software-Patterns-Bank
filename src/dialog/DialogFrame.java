@@ -1,16 +1,33 @@
 package dialog;
 
-import java.awt.Color;
+public class DialogFrame implements Dialog {
+	
+	private String title, message;
 
-import javax.swing.JFrame;
-
-public class DialogFrame extends JFrame {
-
-    public DialogFrame() {
-        getContentPane().setBackground(Color.DARK_GRAY);
-        setTitle("Input Dialog in Frame");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
-        setSize(400, 300);
+	public DialogFrame(String title, String message) {
+        setTitle(title);
+        setMessage(message);
     }
+
+	@Override
+	public void showDialog() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 }

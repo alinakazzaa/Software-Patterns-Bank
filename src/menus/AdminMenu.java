@@ -6,30 +6,29 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import actions.AddAccountToCustomer;
-import actions.ApplyBankCharges;
-import actions.ApplyInterest;
-import actions.DeleteAccount;
-import actions.DeleteCustomer;
-import actions.EditCustomer;
-import actions.NavigateCustomerCollection;
-import actions.Summary;
+import admin.ApplyBankCharges;
+import admin.ApplyInterest;
+import admin.DeleteAccount;
+import admin.DeleteCustomer;
+import admin.EditCustomer;
+import admin.NavigateCustomers;
+import admin.AccountSummary;
+import admin.AddCustomerAccount;
 import banking.BankingMain;
 import classes.Customer;
+import dialog.ConfirmDialog;
+import dialog.DialogFrame;
+import dialog.InputDialog;
+import dialog.MessageDialog;
 
-public class AdminMenu extends JFrame implements ActionListener {
-	
-	JFrame f;
+public class AdminMenu implements ActionListener {
+
 	JPanel deleteCustomerPanel, deleteAccountPanel, bankChargesPanel, interestPanel, editCustomerPanel, navigatePanel,
 			summaryPanel, accountPanel, returnPanel;
 	JButton deleteCustomer, deleteAccount, bankChargesButton, interestButton, editCustomerButton, navigateButton,
@@ -42,13 +41,15 @@ public class AdminMenu extends JFrame implements ActionListener {
 	private BankingMain main;
 	private ArrayList<Customer> customerList;
 	private String adminState;
+	private String title = "Oops!";
+	private DialogFrame dialog;
 
 	public AdminMenu() {
 
 		main = BankingMain.getInstance();
 		customerList = main.getCustomers();
-		
-		if(adminState == null) {
+
+		if (adminState == null) {
 			if (validateUser()) {
 				adminMenuCreated();
 			}
@@ -56,28 +57,18 @@ public class AdminMenu extends JFrame implements ActionListener {
 			adminMenuCreated();
 		}
 	}
-	
+
 	public static AdminMenu getInstance() { // avoid log in each time window is called from another action - singleton
-		
-		if(admin == null) {
+
+		if (admin == null) {
 			admin = new AdminMenu();
 		}
-		
+
 		return admin;
 	}
 
 	public void adminMenuCreated() {
-		
-		f = new JFrame("Administrator Menu");
-		f.setSize(500, 400);
-		f.setLocation(200, 200);
-		f.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent we) {
-				System.exit(0);
-			}
-		});
-		
-		f.setVisible(true);
+		main.createFrame("Administrator Menu");
 
 		// keep buttons together for validation of customer list size later
 		deleteCustomer = new JButton("Delete Customer");
@@ -144,7 +135,7 @@ public class AdminMenu extends JFrame implements ActionListener {
 
 		label1 = new JLabel("Please select an option");
 
-		content = f.getContentPane();
+		content = main.getFrame().getContentPane();
 		content.setLayout(new GridLayout(9, 1));
 		content.add(label1);
 		content.add(accountPanel);
@@ -157,6 +148,8 @@ public class AdminMenu extends JFrame implements ActionListener {
 		content.add(deleteAccountPanel);
 		content.add(returnPanel);
 
+		main.getFrame().setVisible(true);
+
 	}
 
 	public boolean validateUser() {
@@ -164,55 +157,66 @@ public class AdminMenu extends JFrame implements ActionListener {
 		boolean loop2 = false;
 		boolean cont = false;
 		boolean isValid = false;
-		String adminState;
-		
-		
+		String adminState, username, password;
+
 		while (loop) {
 
-			Object adminUsername = JOptionPane.showInputDialog(f, "Enter Administrator Username:");
+			dialog = new InputDialog(null, "Enter Administrator Username:");
+			
+			if(((InputDialog) dialog).getInput() != null && !((InputDialog) dialog).getInput().equals("")) {
+				
+				username = (String) ((InputDialog) dialog).getInput();
 
-			if (!adminUsername.equals("admin")) {
+				if (!username.equals("admin")) {
 
-				int reply = JOptionPane.showConfirmDialog(null, null, "Incorrect Username. Try again?",
-						JOptionPane.YES_NO_OPTION);
-				if (reply == JOptionPane.YES_OPTION) {
-					loop = true;
-				}
+					dialog = new ConfirmDialog(title, "Incorrect Username. Try again?");
 
-				else if (reply == JOptionPane.NO_OPTION) {
-					loop = false;
-					start.menuStart();
-				}
-			} else {
-				loop2 = true;
-			}
+					if (((ConfirmDialog) dialog).getReply() == 0) {
+						loop = true;
+					}
 
-			while (loop2) {
-				Object adminPassword = JOptionPane.showInputDialog(f, "Enter Administrator Password;");
-
-				if (!adminPassword.equals("admin11"))// search admin list for admin with matching admin password
-				{
-					int reply = JOptionPane.showConfirmDialog(null, null, "Incorrect Password. Try again?",
-							JOptionPane.YES_NO_OPTION);
-					if (reply == JOptionPane.YES_OPTION) {
-
-					} else if (reply == JOptionPane.NO_OPTION) {
-						loop2 = false;
+					else if (((ConfirmDialog) dialog).getReply() == 1) {
+						loop = false;
 						start.menuStart();
 					}
 				} else {
-					loop2 = false;
-					cont = true;
-					adminState = "Username: " + adminUsername.toString() + "/n" + "Password: " + adminPassword.toString();
-					setAdminState(adminState);
+					loop2 = true;
 				}
-			}
 
-			if (cont) {
+				while (loop2) {
+
+					dialog = new InputDialog(null, "Enter Administrator Password;");
+					password = (String) ((InputDialog) dialog).getInput();
+
+					if (!password.equals("admin11"))// search admin list for admin with matching admin password
+					{
+
+						dialog = new ConfirmDialog(title, "Incorrect Password. Try again?");
+
+						if (((ConfirmDialog) dialog).getReply() == 0) {
+
+						} else if (((ConfirmDialog) dialog).getReply() == 1) {
+							loop2 = false;
+							start.menuStart();
+						}
+					} else {
+						loop2 = false;
+						cont = true;
+						adminState = "Username: " + username + "/n" + "Password: " + password;
+						setAdminState(adminState);
+					}
+				}
+
+				if (cont) {
+					loop = false;
+					isValid = true;
+
+				}
+			} else {
 				loop = false;
-				isValid = true;
-				
 			}
+			
+			
 
 		}
 
@@ -222,38 +226,39 @@ public class AdminMenu extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
+		String customerID;
 		Customer customer = null;
 		boolean loop = true;
 		boolean found = false;
 
-		if (customerList.isEmpty()) {
-			JOptionPane.showMessageDialog(f, "There are no customers yet!", "Oops!", JOptionPane.INFORMATION_MESSAGE);
-			
-		} else if (e.getActionCommand().equals("Exit Admin Menu")) {
-			f.dispose();
+		if (e.getActionCommand().equals("Exit Admin Menu")) {
+
+			main.getFrame().dispose();
 			start.menuStart();
+
 		} else if (customerList.isEmpty()) {
-			JOptionPane.showMessageDialog(f, "There are no customers yet!", "Oops!", JOptionPane.INFORMATION_MESSAGE);
-			
-		} else if(e.getActionCommand().equals("Navigate Customer Collection")) {
-			f.dispose();
-			new NavigateCustomerCollection();
-			
-		} else if(e.getActionCommand().equals("Display Summary Of All Accounts")) {
-			f.dispose();
-			new Summary();
-			
+
+			new MessageDialog(title, "There are no customers yet!");
+
+		} else if (customerList.isEmpty()) {
+
+			new MessageDialog(title, "There are no customers yet!");
+
+		} else if (e.getActionCommand().equals("Navigate Customer Collection")) {
+			new NavigateCustomers();
+
+		} else if (e.getActionCommand().equals("Display Summary Of All Accounts")) {
+			new AccountSummary();
+
 		} else {
 
 			while (loop) {
 
-				String customerID = JOptionPane.showInputDialog(f,
-						"Customer ID:");
+				dialog = new InputDialog(null, "Customer ID:");
 
-				if (customerID.isEmpty() || customerID == null) {
-					System.out.println("empty");
-				} else {
-					
+				customerID = (String) ((InputDialog) dialog).getInput();
+
+				if (!customerID.isEmpty() && customerID != null) {
 					customer = main.getCustomerByID(customerID);
 
 					if (customer != null) {
@@ -261,75 +266,73 @@ public class AdminMenu extends JFrame implements ActionListener {
 						found = true;
 
 					} else {
+						dialog = new ConfirmDialog(null, "User not found. Try again?");
 
-						int reply = JOptionPane.showConfirmDialog(null, null, "User not found. Try again?",
-								JOptionPane.YES_NO_OPTION);
-						if (reply != JOptionPane.YES_OPTION) {
+						if (((ConfirmDialog) dialog).getReply() != 0) {
 							loop = false;
 						}
 					}
-
 				}
 
 			}
-			
+
 			if (found) {
 				switch (e.getActionCommand()) {
 				case "Add an Account to a Customer":
-					new AddAccountToCustomer(customer);
+					new AddCustomerAccount(customer);
 					break;
 				case "Apply Bank Charges":
-					
-					if(customer.getAccounts().size() > 0) {
-						f.dispose();
+
+					if (customer.getAccounts().size() > 0) {
 						new ApplyBankCharges(customer);
 					} else {
-						JOptionPane.showMessageDialog(f, "User has no accounts!", "Oops!", JOptionPane.INFORMATION_MESSAGE);
+
+						new MessageDialog(title, "User has no accounts!");
 					}
 					break;
-					
+
 				case "Apply Interest":
 
-					if(customer.getAccounts().size() > 0) {
-						f.dispose();
+					if (customer.getAccounts().size() > 0) {
 						new ApplyInterest(customer);
 					} else {
-						JOptionPane.showMessageDialog(f, "User has no accounts!", "Oops!", JOptionPane.INFORMATION_MESSAGE);
+
+						new MessageDialog(title, "User has no accounts!");
 					}
 					break;
-					
+
 				case "Edit existing Customer":
-					
-					f.dispose();
+
 					new EditCustomer(customer);
 					break;
-					
+
 				case "Delete Customer":
-					
+
 					new DeleteCustomer(customer);
 					break;
-					
+
 				case "Delete Account":
-					
-					if(customer.getAccounts().size() > 0) {
-						f.dispose();
+
+					if (customer.getAccounts().size() > 0) {
+
 						new DeleteAccount(customer);
 					} else {
-						JOptionPane.showMessageDialog(f, "User has no accounts!", "Oops!", JOptionPane.INFORMATION_MESSAGE);
+
+						new MessageDialog(title, "User has no accounts!");
 					}
 					break;
-					
+
 				}
-				
+
 			}
 
 		}
 	}
-	
+
 	public void setAdminState(String adminState) {
 		this.adminState = adminState;
 	}
-	
+
 	public String getAdminState() {
 		return this.adminState;
 	}

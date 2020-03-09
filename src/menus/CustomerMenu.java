@@ -1,29 +1,26 @@
 package menus;
 
 import java.awt.Container;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import actions.AccountScreen;
 import banking.BankingMain;
 import classes.Customer;
 import classes.CustomerAccount;
+import customer.CustomerAccounts;
+import dialog.ConfirmDialog;
+import dialog.DialogFrame;
+import dialog.InputDialog;
 
-public class CustomerMenu extends JFrame implements ActionListener {
+public class CustomerMenu implements ActionListener {
 
 	private static CustomerMenu cusMenu;
 	String userType;
-	JFrame f;
 	JPanel panel2;
 	JButton add, returnButton, continueButton;
 	Container content;
@@ -34,7 +31,9 @@ public class CustomerMenu extends JFrame implements ActionListener {
 	private BankingMain main;
 	private Customer customer;
 	private CustomerAccount acc;
+	private DialogFrame dialog;
 	JComboBox<String> box;
+	private String title = "Oops!";
 
 	public CustomerMenu() {
 		main = BankingMain.getInstance();
@@ -42,13 +41,11 @@ public class CustomerMenu extends JFrame implements ActionListener {
 		
 		if(customer == null) {
 			if(customerLogIn()) {
-				customerMenuCreated();
+				new CustomerAccounts();
 			}
 		} else {
-			customerMenuCreated();
+			new CustomerAccounts();
 		}
-		
-		System.out.println(this.customer);
 		
 	}
 	
@@ -61,125 +58,84 @@ public class CustomerMenu extends JFrame implements ActionListener {
 		return cusMenu;
 	}
 
-	public void customerMenuCreated() {
-
-		f = new JFrame("Customer Menu");
-		f.setSize(400, 300);
-		f.setLocation(200, 200);
-		f.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent we) {
-				System.exit(0);
-			}
-		});
-		f.setVisible(true);
-
-		if (customer.getAccounts().size() == 0) {
-			JOptionPane.showMessageDialog(f,
-					"This customer does not have any accounts yet. \n An admin must create an account for this customer \n for them to be able to use customer functionality. ",
-					"Oops!", JOptionPane.INFORMATION_MESSAGE);
-			f.dispose();
-			start.menuStart();
-		} else {
-			buttonPanel = new JPanel();
-			boxPanel = new JPanel();
-			labelPanel = new JPanel();
-
-			label = new JLabel("Select Account:");
-			labelPanel.add(label);
-
-			returnButton = new JButton("Return");
-			returnButton.addActionListener(this);
-			buttonPanel.add(returnButton);
-			
-			continueButton = new JButton("Continue");
-			continueButton.addActionListener(this);
-			buttonPanel.add(continueButton);
-
-			box = new JComboBox<String>();
-			
-			for (int i = 0; i < customer.getAccounts().size(); i++) {
-				box.addItem(customer.getAccounts().get(i).getNumber());
-			}
-
-			for (int i = 0; i < customer.getAccounts().size(); i++) {
-				if (customer.getAccounts().get(i).getNumber() == box.getSelectedItem()) {
-					acc = customer.getAccounts().get(i);
-				}
-			}
-
-			boxPanel.add(box);
-			content = f.getContentPane();
-			content.setLayout(new GridLayout(3, 1));
-			content.add(labelPanel);
-			content.add(boxPanel);
-			content.add(buttonPanel);
-		}
-	}
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		f.dispose();
 		if(e.getActionCommand().equals("Return")) {
 			// sign out user from state - ie set to null
 			setCustomer(null);
+			start.menuStart();
 		} else {
-			new AccountScreen(acc);
+			new CustomerAccountMenu(acc);
 		}
 		
 	}
 	
 	public boolean customerLogIn() {
-		boolean loop = true, loop2 = true;
+		boolean loop = true, loop2 = false;
 		boolean cont = false;
 		boolean found = false;
 		Customer customer = null;
-		
-		if(main.getCustomers().size() > 0) {
+		String customerPassword, customerID;
 			
 			while (loop) {
-				Object customerID = JOptionPane.showInputDialog(f, "Enter Customer ID:");
-				customer = main.getCustomerByID(customerID.toString());
+				// reusable components
+				dialog = new InputDialog(null, "Enter Customer ID:");
 				
-					if(customer == null) {
-						int reply = JOptionPane.showConfirmDialog(null, null, "User not found. Try again?",
-								JOptionPane.YES_NO_OPTION);
-						if (reply == JOptionPane.YES_OPTION) {
-							loop = true;
-						} else if (reply == JOptionPane.NO_OPTION) {
-							loop = false;
-							loop2 = false;
-							start.menuStart();
-						}
-					} else {
-						loop = false;
-						
-						while (loop2) {
-							Object customerPassword = JOptionPane.showInputDialog(f, "Enter Customer Password;");
+				if(((InputDialog) dialog).getInput() != null && !((InputDialog) dialog).getInput().equals("")) {
+					
+					customerID = (String) ((InputDialog) dialog).getInput();
+					
+					customer = main.getCustomerByID(customerID);
+					
+						if(customer == null) {
+							// reusable components
+							dialog = new ConfirmDialog(title, "User not found. Try again?");
 							
-							if (!customer.getPassword().equals(customerPassword))// check if custoemr password is correct
-							{
-								int reply = JOptionPane.showConfirmDialog(null, null, "Incorrect password. Try again?",
-										JOptionPane.YES_NO_OPTION);
-								if (reply == JOptionPane.YES_OPTION) {
-
-								} else if (reply == JOptionPane.NO_OPTION) {
-									loop2 = false;
-									start.menuStart();
-								}
+							if (((ConfirmDialog) dialog).getReply() == 0) {
+								loop = true;
 							} else {
+								loop = false;
 								loop2 = false;
-								cont = true;
+								start.menuStart();
+							}
+						} else {
+							loop = false;
+							loop2 = true;
+							
+							while (loop2) {
+								// reusable components
+								dialog = new InputDialog(null, "Enter Customer Password;");
+								customerPassword = (String) ((InputDialog) dialog).getInput();
+								
+								if (!customer.getPassword().equals(customerPassword))// check if custoemr password is correct
+								{
+									// reusable components
+									new ConfirmDialog(title, "Incorrect password. Try again?");
+									
+									if (((ConfirmDialog) dialog).getReply() == 0) {
+
+									} else {
+										loop2 = false;
+										start.menuStart();
+									}
+								} else {
+									loop2 = false;
+									cont = true;
+								}
+							}
+
+							if (cont) {
+								found = true;
+								setCustomer(customer);
 							}
 						}
-
-						if (cont) {
-							found = true;
-							setCustomer(customer);
-						}
-					}
+				} else {
+					loop = false;
+				}
+				
+				
 
 			}
-		}
 		
 		return found;
 		

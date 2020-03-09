@@ -6,13 +6,14 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-import customer.NewCustomer;
 import banking.BankingMain;
 import classes.Customer;
+import factory.GetUserFactory;
 
 public class StartMenu {
 
 	private BankingMain main;
+	private static StartMenu start;
 	JPanel userTypePanel, continuePanel;
 	JLabel customerIDLabel, passwordLabel;
 	JTextField customerIDTextField, passwordTextField;
@@ -22,6 +23,15 @@ public class StartMenu {
 	JPanel panel2;
 	JButton add, continueButton;
 	String PPS, firstName, surname, DOB, CustomerID;
+	
+	
+	public static StartMenu getInstance() {
+		if(start == null) {
+			start = new StartMenu();
+		}
+		
+		return start;
+	}
 
 	public void menuStart() {
 		/*
@@ -63,19 +73,9 @@ public class StartMenu {
 			public void actionPerformed(ActionEvent e) {
 				String user = userType.getSelection().getActionCommand();
 				// can use abstract factory method here
-				if (user.equals("New Customer")) {
-					main.getFrame().dispose();
-					new NewCustomer();
-
-				} else if (user.equals("Customer")) {
-					main.getFrame().dispose();
-					CustomerMenu.getInstance();
-
-				} else {
-					main.getFrame().dispose();
-					AdminMenu.getInstance();
-
-				}
+				
+				GetUserFactory.getUserFactory(user).getMenu();
+				
 			}
 		});
 

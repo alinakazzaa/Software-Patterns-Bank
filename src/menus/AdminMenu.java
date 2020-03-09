@@ -28,7 +28,7 @@ import dialog.InputDialog;
 import dialog.MessageDialog;
 
 public class AdminMenu implements ActionListener {
-	
+
 	JPanel deleteCustomerPanel, deleteAccountPanel, bankChargesPanel, interestPanel, editCustomerPanel, navigatePanel,
 			summaryPanel, accountPanel, returnPanel;
 	JButton deleteCustomer, deleteAccount, bankChargesButton, interestButton, editCustomerButton, navigateButton,
@@ -48,8 +48,8 @@ public class AdminMenu implements ActionListener {
 
 		main = BankingMain.getInstance();
 		customerList = main.getCustomers();
-		
-		if(adminState == null) {
+
+		if (adminState == null) {
 			if (validateUser()) {
 				adminMenuCreated();
 			}
@@ -57,13 +57,13 @@ public class AdminMenu implements ActionListener {
 			adminMenuCreated();
 		}
 	}
-	
+
 	public static AdminMenu getInstance() { // avoid log in each time window is called from another action - singleton
-		
-		if(admin == null) {
+
+		if (admin == null) {
 			admin = new AdminMenu();
 		}
-		
+
 		return admin;
 	}
 
@@ -147,7 +147,7 @@ public class AdminMenu implements ActionListener {
 		content.add(deleteCustomerPanel);
 		content.add(deleteAccountPanel);
 		content.add(returnPanel);
-		
+
 		main.getFrame().setVisible(true);
 
 	}
@@ -158,58 +158,65 @@ public class AdminMenu implements ActionListener {
 		boolean cont = false;
 		boolean isValid = false;
 		String adminState, username, password;
-		
-		
+
 		while (loop) {
 
 			dialog = new InputDialog(null, "Enter Administrator Username:");
-			username = (String) ((InputDialog) dialog).getInput();
 			
-			if (!username.equals("admin")) {
-
-				dialog = new ConfirmDialog(title, "Incorrect Username. Try again?");
+			if(((InputDialog) dialog).getInput() != null && !((InputDialog) dialog).getInput().equals("")) {
 				
-				if (((ConfirmDialog) dialog).getReply() == 0) {
-					loop = true;
-				}
+				username = (String) ((InputDialog) dialog).getInput();
 
-				else if (((ConfirmDialog) dialog).getReply() == 1) {
-					loop = false;
-					start.menuStart();
-				}
-			} else {
-				loop2 = true;
-			}
+				if (!username.equals("admin")) {
 
-			while (loop2) {
-				
-				dialog = new InputDialog(null, "Enter Administrator Password;");
-				password = (String) ((InputDialog) dialog).getInput();
-				
-				if (!password.equals("admin11"))// search admin list for admin with matching admin password
-				{
-					
-					dialog = new ConfirmDialog(title, "Incorrect Password. Try again?");
-					
+					dialog = new ConfirmDialog(title, "Incorrect Username. Try again?");
+
 					if (((ConfirmDialog) dialog).getReply() == 0) {
+						loop = true;
+					}
 
-					} else if (((ConfirmDialog) dialog).getReply() == 1) {
-						loop2 = false;
+					else if (((ConfirmDialog) dialog).getReply() == 1) {
+						loop = false;
 						start.menuStart();
 					}
 				} else {
-					loop2 = false;
-					cont = true;
-					adminState = "Username: " + username + "/n" + "Password: " + password;
-					setAdminState(adminState);
+					loop2 = true;
 				}
-			}
 
-			if (cont) {
+				while (loop2) {
+
+					dialog = new InputDialog(null, "Enter Administrator Password;");
+					password = (String) ((InputDialog) dialog).getInput();
+
+					if (!password.equals("admin11"))// search admin list for admin with matching admin password
+					{
+
+						dialog = new ConfirmDialog(title, "Incorrect Password. Try again?");
+
+						if (((ConfirmDialog) dialog).getReply() == 0) {
+
+						} else if (((ConfirmDialog) dialog).getReply() == 1) {
+							loop2 = false;
+							start.menuStart();
+						}
+					} else {
+						loop2 = false;
+						cont = true;
+						adminState = "Username: " + username + "/n" + "Password: " + password;
+						setAdminState(adminState);
+					}
+				}
+
+				if (cont) {
+					loop = false;
+					isValid = true;
+
+				}
+			} else {
 				loop = false;
-				isValid = true;
-				
 			}
+			
+			
 
 		}
 
@@ -218,39 +225,39 @@ public class AdminMenu implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+
 		String customerID;
 		Customer customer = null;
 		boolean loop = true;
 		boolean found = false;
 
-		if (customerList.isEmpty()) {
-			
-			new MessageDialog(title, "There are no customers yet!");
-			
-		} else if (e.getActionCommand().equals("Exit Admin Menu")) {
-			
+		if (e.getActionCommand().equals("Exit Admin Menu")) {
+
 			main.getFrame().dispose();
 			start.menuStart();
-			
+
 		} else if (customerList.isEmpty()) {
-			
+
 			new MessageDialog(title, "There are no customers yet!");
-			
-		} else if(e.getActionCommand().equals("Navigate Customer Collection")) {
+
+		} else if (customerList.isEmpty()) {
+
+			new MessageDialog(title, "There are no customers yet!");
+
+		} else if (e.getActionCommand().equals("Navigate Customer Collection")) {
 			new NavigateCustomers();
-			
-		} else if(e.getActionCommand().equals("Display Summary Of All Accounts")) {
+
+		} else if (e.getActionCommand().equals("Display Summary Of All Accounts")) {
 			new AccountSummary();
-			
+
 		} else {
 
 			while (loop) {
-				
+
 				dialog = new InputDialog(null, "Customer ID:");
-				
+
 				customerID = (String) ((InputDialog) dialog).getInput();
-				
+
 				if (!customerID.isEmpty() && customerID != null) {
 					customer = main.getCustomerByID(customerID);
 
@@ -260,7 +267,7 @@ public class AdminMenu implements ActionListener {
 
 					} else {
 						dialog = new ConfirmDialog(null, "User not found. Try again?");
-						
+
 						if (((ConfirmDialog) dialog).getReply() != 0) {
 							loop = false;
 						}
@@ -268,64 +275,64 @@ public class AdminMenu implements ActionListener {
 				}
 
 			}
-			
+
 			if (found) {
 				switch (e.getActionCommand()) {
 				case "Add an Account to a Customer":
 					new AddCustomerAccount(customer);
 					break;
 				case "Apply Bank Charges":
-					
-					if(customer.getAccounts().size() > 0) {
+
+					if (customer.getAccounts().size() > 0) {
 						new ApplyBankCharges(customer);
 					} else {
-						
+
 						new MessageDialog(title, "User has no accounts!");
 					}
 					break;
-					
+
 				case "Apply Interest":
 
-					if(customer.getAccounts().size() > 0) {
+					if (customer.getAccounts().size() > 0) {
 						new ApplyInterest(customer);
 					} else {
-						
+
 						new MessageDialog(title, "User has no accounts!");
 					}
 					break;
-					
+
 				case "Edit existing Customer":
 
 					new EditCustomer(customer);
 					break;
-					
+
 				case "Delete Customer":
-					
+
 					new DeleteCustomer(customer);
 					break;
-					
+
 				case "Delete Account":
-					
-					if(customer.getAccounts().size() > 0) {
-						
+
+					if (customer.getAccounts().size() > 0) {
+
 						new DeleteAccount(customer);
 					} else {
-						
+
 						new MessageDialog(title, "User has no accounts!");
 					}
 					break;
-					
+
 				}
-				
+
 			}
 
 		}
 	}
-	
+
 	public void setAdminState(String adminState) {
 		this.adminState = adminState;
 	}
-	
+
 	public String getAdminState() {
 		return this.adminState;
 	}

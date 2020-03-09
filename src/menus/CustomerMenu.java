@@ -71,7 +71,7 @@ public class CustomerMenu implements ActionListener {
 	}
 	
 	public boolean customerLogIn() {
-		boolean loop = true, loop2 = true;
+		boolean loop = true, loop2 = false;
 		boolean cont = false;
 		boolean found = false;
 		Customer customer = null;
@@ -80,51 +80,60 @@ public class CustomerMenu implements ActionListener {
 			while (loop) {
 				// reusable components
 				dialog = new InputDialog(null, "Enter Customer ID:");
-				customerID = (String) ((InputDialog) dialog).getInput();
 				
-				customer = main.getCustomerByID(customerID);
-				
-					if(customer == null) {
-						// reusable components
-						dialog = new ConfirmDialog(title, "User not found. Try again?");
-						
-						if (((ConfirmDialog) dialog).getReply() == 0) {
-							loop = true;
-						} else if (((ConfirmDialog) dialog).getReply() == 1) {
-							loop = false;
-							loop2 = false;
-							start.menuStart();
-						}
-					} else {
-						loop = false;
-						
-						while (loop2) {
+				if(((InputDialog) dialog).getInput() != null && !((InputDialog) dialog).getInput().equals("")) {
+					
+					customerID = (String) ((InputDialog) dialog).getInput();
+					
+					customer = main.getCustomerByID(customerID);
+					
+						if(customer == null) {
 							// reusable components
-							dialog = new InputDialog(null, "Enter Customer Password;");
-							customerPassword = (String) ((InputDialog) dialog).getInput();
+							dialog = new ConfirmDialog(title, "User not found. Try again?");
 							
-							if (!customer.getPassword().equals(customerPassword))// check if custoemr password is correct
-							{
-								// reusable components
-								new ConfirmDialog(title, "Incorrect password. Try again?");
-								
-								if (((ConfirmDialog) dialog).getReply() == 0) {
-
-								} else if (((ConfirmDialog) dialog).getReply() == 1) {
-									loop2 = false;
-									start.menuStart();
-								}
+							if (((ConfirmDialog) dialog).getReply() == 0) {
+								loop = true;
 							} else {
+								loop = false;
 								loop2 = false;
-								cont = true;
+								start.menuStart();
+							}
+						} else {
+							loop = false;
+							loop2 = true;
+							
+							while (loop2) {
+								// reusable components
+								dialog = new InputDialog(null, "Enter Customer Password;");
+								customerPassword = (String) ((InputDialog) dialog).getInput();
+								
+								if (!customer.getPassword().equals(customerPassword))// check if custoemr password is correct
+								{
+									// reusable components
+									new ConfirmDialog(title, "Incorrect password. Try again?");
+									
+									if (((ConfirmDialog) dialog).getReply() == 0) {
+
+									} else {
+										loop2 = false;
+										start.menuStart();
+									}
+								} else {
+									loop2 = false;
+									cont = true;
+								}
+							}
+
+							if (cont) {
+								found = true;
+								setCustomer(customer);
 							}
 						}
-
-						if (cont) {
-							found = true;
-							setCustomer(customer);
-						}
-					}
+				} else {
+					loop = false;
+				}
+				
+				
 
 			}
 		
